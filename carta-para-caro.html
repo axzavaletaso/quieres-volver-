@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Para ti, Caro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Caveat:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3e8d8;
+    --ink:#2e211c;
+    --ink-soft:#4a3831;
+    --wine:#6e2a3a;
+    --wine-dark:#4e1d29;
+    --wine-bright:#8a3347;
+    --rose:#c98a93;
+    --gold:#b98b4e;
+    --night:#1f1620;
+    --night-2:#2b1e2c;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    height:100%;
+    background:var(--night);
+    overflow:hidden;
+  }
+  body{
+    font-family:'EB Garamond', serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- Escena 1: el sobre ---------- */
+  .scene-envelope{
+    position:fixed;
+    inset:0;
+    z-index:10;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:28px;
+    background:
+      radial-gradient(ellipse at 50% 28%, var(--night-2), var(--night) 72%);
+    transition:opacity .8s ease;
+  }
+  .scene-envelope.fade-out{
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .ambient-particles{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .particle{
+    position:absolute;
+    bottom:-10px;
+    width:3px;
+    height:3px;
+    border-radius:50%;
+    background:var(--gold);
+    opacity:0;
+    animation-name:float-up;
+    animation-timing-function:ease-in;
+    animation-iteration-count:infinite;
+  }
+  @keyframes float-up{
+    0%{ transform:translateY(0); opacity:0; }
+    12%{ opacity:.55; }
+    85%{ opacity:.35; }
+    100%{ transform:translateY(-70vh); opacity:0; }
+  }
+
+  .envelope-wrap{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+  }
+
+  .envelope{
+    position:relative;
+    width:min(300px, 78vw);
+    aspect-ratio:3/2;
+    background:none;
+    border:none;
+    padding:0;
+    cursor:pointer;
+    perspective:1200px;
+  }
+  .envelope:focus-visible{
+    outline:2px solid var(--rose);
+    outline-offset:8px;
+  }
+  .envelope-back{
+    position:absolute;
+    inset:0;
+    border-radius:5px;
+    background:linear-gradient(160deg,var(--wine-bright),var(--wine-dark));
+    box-shadow:0 30px 60px -18px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .letter-peek{
+    position:absolute;
+    left:9%;
+    right:9%;
+    top:16%;
+    height:64%;
+    background:var(--paper);
+    border-radius:3px;
+    box-shadow:0 10px 24px rgba(0,0,0,.3);
+    opacity:0;
+    transform:translateY(8%);
+    transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .45s, opacity .5s ease .45s;
+    z-index:1;
+  }
+  .envelope.opening .letter-peek{
+    opacity:1;
+    transform:translateY(-42%);
+    z-index:4;
+  }
+  .envelope-flap{
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    height:58%;
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    background:linear-gradient(200deg,#7c3245,var(--wine-dark));
+    transform-origin:top center;
+    transition:transform 1s cubic-bezier(.65,0,.35,1);
+    box-shadow:0 6px 14px rgba(0,0,0,.35);
+    z-index:3;
+  }
+  .envelope.opening .envelope-flap{
+    transform:rotateX(-178deg);
+  }
+  .wax-seal{
+    position:absolute;
+    top:52%; left:50%;
+    width:clamp(42px,11vw,56px);
+    height:clamp(42px,11vw,56px);
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #dcb06a, var(--gold) 55%, #8a642f 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Caveat',cursive;
+    font-size:clamp(1.3rem,4vw,1.6rem);
+    color:var(--wine-dark);
+    box-shadow:0 4px 10px rgba(0,0,0,.4), inset 0 2px 3px rgba(255,255,255,.4);
+    z-index:5;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .envelope.opening .wax-seal{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(1.4) rotate(14deg);
+  }
+
+  .envelope-hint{
+    margin:0;
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    font-size:.85rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--rose);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:.55; }
+    50%{ opacity:1; }
+  }
+  .envelope.opening ~ .envelope-hint{
+    opacity:0;
+    transition:opacity .3s ease;
+  }
+
+  /* ---------- Escena 2: la carta ---------- */
+  .scene-letter{
+    min-height:100%;
+    background:linear-gradient(180deg,#241a26 0%, #1c1420 420px, var(--night) 820px);
+    padding:72px 18px 110px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .letter-card{
+    width:100%;
+    max-width:620px;
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 18% 15%, rgba(110,42,58,.04), transparent 40%),
+      radial-gradient(circle at 82% 65%, rgba(185,139,78,.06), transparent 45%);
+    border-radius:4px;
+    padding:clamp(30px,6vw,58px);
+    box-shadow:0 24px 60px -14px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.18);
+  }
+
+  .dateline{
+    margin:0 0 30px;
+    text-align:right;
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    font-size:.78rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:.75;
+  }
+
+  .salutation{
+    margin:0 0 34px;
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:clamp(1.5rem,4.4vw,2rem);
+    color:var(--wine);
+  }
+  .salutation .script{
+    font-family:'Caveat', cursive;
+    font-style:normal;
+    font-size:1.35em;
+    color:var(--wine);
+  }
+
+  .letter-body p{
+    font-size:clamp(1.02rem,2.1vw,1.14rem);
+    line-height:1.9;
+    color:var(--ink-soft);
+    margin:0 0 1.5em;
+  }
+  .letter-body p:first-of-type::first-letter{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-style:italic;
+    font-size:3.1em;
+    line-height:.75;
+    float:left;
+    padding:6px 9px 0 0;
+    color:var(--wine);
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(16px);
+    transition:opacity .85s ease, transform .85s ease;
+  }
+  .reveal.in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  .letter-sign{
+    margin:12px 0 44px;
+  }
+  .sign-off{
+    margin:0 0 2px;
+    font-style:italic;
+    color:var(--ink-soft);
+    font-size:1.02rem;
+  }
+  .signature{
+    font-family:'Caveat', cursive;
+    font-size:2.4rem;
+    color:var(--wine);
+    margin:0;
+  }
+
+  .reply-box{
+    border-top:1px solid rgba(185,139,78,.4);
+    padding-top:32px;
+    text-align:center;
+  }
+  .reply-question{
+    font-style:italic;
+    color:var(--ink-soft);
+    font-size:1.05rem;
+    margin:0 0 22px;
+  }
+  .reply-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    justify-content:center;
+  }
+  .btn{
+    font-family:'Jost', sans-serif;
+    font-size:.92rem;
+    letter-spacing:.02em;
+    padding:13px 24px;
+    border-radius:3px;
+    cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease, background .2s ease;
+  }
+  .btn:focus-visible{
+    outline:2px solid var(--wine);
+    outline-offset:3px;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--wine-bright),var(--wine-dark));
+    color:var(--paper);
+    border:none;
+    box-shadow:0 8px 18px -6px rgba(110,42,58,.6);
+  }
+  .btn-primary:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 12px 22px -6px rgba(110,42,58,.7); }
+  .btn-secondary{
+    background:transparent;
+    color:var(--ink-soft);
+    border:1px solid rgba(74,56,49,.35);
+  }
+  .btn-secondary:hover:not(:disabled){ background:rgba(74,56,49,.06); }
+  .btn:disabled{ opacity:.45; cursor:default; transform:none; }
+
+  .reply-response{
+    margin:22px 0 0;
+    font-family:'Caveat', cursive;
+    font-size:1.4rem;
+    color:var(--wine);
+    opacity:0;
+    transition:opacity .7s ease;
+    min-height:1.4em;
+  }
+  .reply-response.show{ opacity:1; }
+
+  .reset-reply{
+    display:inline-block;
+    margin-top:10px;
+    font-family:'Jost', sans-serif;
+    font-size:.72rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    opacity:.55;
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+  }
+  .reset-reply:hover{ opacity:.85; }
+  .reset-reply[hidden]{ display:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="scene-envelope" id="envelopeScene">
+    <div class="ambient-particles" id="particles" aria-hidden="true"></div>
+    <div class="envelope-wrap">
+      <button class="envelope" id="envelopeBtn" aria-label="Abrir la carta">
+        <div class="envelope-back"></div>
+        <div class="letter-peek"></div>
+        <div class="envelope-flap"></div>
+        <div class="wax-seal">A</div>
+      </button>
+      <p class="envelope-hint">Toca el sobre</p>
+    </div>
+  </div>
+
+  <div class="scene-letter">
+    <main class="letter-card">
+      <p class="dateline" id="dateline"></p>
+      <p class="salutation">Para ti, <span class="script">Caro</span></p>
+
+      <section class="letter-body">
+        <p class="reveal">Sé que hemos pasado por momentos difíciles y que mis errores pesaron mucho en nuestra relación. He estado pensando profundamente en todo, en lo que fuimos y en lo valioso que es lo que construimos juntos.</p>
+        <p class="reveal">Quiero pedirte perdón de todo corazón por cada vez que te hice sentir mal, por los desacuerdos y por todo el dolor que mis acciones o faltas de sinceridad pudieron causarte. Reconozco mis fallas y me duele enormemente saber que te lastimé.</p>
+        <p class="reveal">Eres una persona sumamente especial para mí, y los momentos más bonitos que tengo guardados son a tu lado. Sé que reconstruir la confianza toma tiempo y que las cosas no se borran de la noche a la mañana, pero mi arrepentimiento es sincero y mi deseo de hacer las cosas bien también.</p>
+        <p class="reveal">Si en tu corazón todavía queda un espacio y deseas darme la oportunidad de demostrarte un cambio real, me encantaría saber si quieres volver a intentarlo conmigo y caminar de la mano otra vez.</p>
+        <p class="reveal">Gracias por haber sido parte de mi vida y por todo lo bonito que me has enseñado. Pase lo que pase, siempre te tendré un cariño inmenso.</p>
+      </section>
+
+      <footer class="letter-sign reveal">
+        <p class="sign-off">Con todo mi cariño,</p>
+        <p class="signature">Axel</p>
+      </footer>
+
+      <section class="reply-box reveal" id="replyBox">
+        <p class="reply-question">Cuando estés lista, me encantaría saber qué sientes.</p>
+        <div class="reply-actions">
+          <button class="btn btn-primary" data-reply="yes">Sí, quiero intentarlo 💛</button>
+          <button class="btn btn-secondary" data-reply="wait">Necesito más tiempo</button>
+        </div>
+        <p class="reply-response" id="replyResponse" aria-live="polite"></p>
+        <button class="reset-reply" id="resetReply" hidden>Cambiar respuesta</button>
+      </section>
+    </main>
+  </div>
+
+<script>
+  // Fecha en la cabecera de la carta
+  const dateline = document.getElementById('dateline');
+  const hoy = new Date().toLocaleDateString('es-PE', { day:'numeric', month:'long', year:'numeric' });
+  dateline.textContent = `Trujillo, ${hoy}`;
+
+  // Partículas ambientales (motas de luz cálida)
+  const particlesWrap = document.getElementById('particles');
+  const total = 16;
+  for (let i = 0; i < total; i++) {
+    const p = document.createElement('span');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (7 + Math.random() * 6) + 's';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 2) + 'px';
+    particlesWrap.appendChild(p);
+  }
+
+  // Abrir el sobre
+  const envelopeBtn = document.getElementById('envelopeBtn');
+  const envelopeScene = document.getElementById('envelopeScene');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  envelopeBtn.addEventListener('click', () => {
+    if (envelopeBtn.classList.contains('opening')) return;
+    envelopeBtn.classList.add('opening');
+    envelopeBtn.setAttribute('aria-label', 'Carta abierta');
+    const wait = reduced ? 50 : 1300;
+    setTimeout(() => {
+      envelopeScene.classList.add('fade-out');
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+      setTimeout(() => { envelopeScene.style.display = 'none'; }, reduced ? 0 : 700);
+    }, wait);
+  });
+
+  // Revelado progresivo de párrafos al hacer scroll
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+      }
+    });
+  }, { threshold: 0.25 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Respuesta al final de la carta
+  const replyButtons = document.querySelectorAll('.reply-actions .btn');
+  const replyResponse = document.getElementById('replyResponse');
+  const resetReply = document.getElementById('resetReply');
+  const responses = {
+    yes: 'Gracias por darme esta oportunidad. No la voy a desperdiciar. 💛',
+    wait: 'Está bien, tómate el tiempo que necesites. Aquí voy a estar.'
+  };
+
+  const FORMSPREE_URL = 'https://formspree.io/f/xbgrzoyq';
+
+  function enviarRespuesta(etiqueta) {
+    fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        respuesta: etiqueta,
+        fecha: new Date().toLocaleString('es-PE')
+      })
+    }).catch(err => console.error('No se pudo enviar la respuesta:', err));
+  }
+
+  replyButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      replyButtons.forEach(b => b.disabled = true);
+      replyResponse.textContent = responses[btn.dataset.reply];
+      replyResponse.classList.add('show');
+      resetReply.hidden = false;
+      enviarRespuesta(btn.textContent.trim());
+    });
+  });
+
+  resetReply.addEventListener('click', () => {
+    replyButtons.forEach(b => b.disabled = false);
+    replyResponse.classList.remove('show');
+    replyResponse.textContent = '';
+    resetReply.hidden = true;
+  });
+</script>
+</body>
+</html>
