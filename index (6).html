@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Para ti, Caro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Caveat:wght@500;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="scene-envelope" id="envelopeScene">
+    <div class="ambient-particles" id="particles" aria-hidden="true"></div>
+    <div class="envelope-wrap">
+      <button class="envelope" id="envelopeBtn" aria-label="Abrir la carta">
+        <div class="envelope-back"></div>
+        <div class="letter-peek"></div>
+        <div class="envelope-flap"></div>
+        <div class="wax-seal">A</div>
+      </button>
+      <p class="envelope-hint">Toca el sobre</p>
+    </div>
+  </div>
+
+  <div class="scene-letter">
+    <main class="letter-card">
+      <p class="dateline" id="dateline"></p>
+      <p class="salutation">Para ti, <span class="script">Caro</span></p>
+
+      <section class="letter-body">
+        <p class="reveal">Sé que hemos pasado por momentos difíciles y que mis errores pesaron mucho en nuestra relación. He estado pensando profundamente en todo, en lo que fuimos y en lo valioso que es lo que construimos juntos.</p>
+        <p class="reveal">Quiero pedirte perdón de todo corazón por cada vez que te hice sentir mal, por los desacuerdos y por todo el dolor que mis acciones o faltas de sinceridad pudieron causarte. Reconozco mis fallas y me duele enormemente saber que te lastimé.</p>
+        <p class="reveal">Eres una persona sumamente especial para mí, y los momentos más bonitos que tengo guardados son a tu lado. Sé que reconstruir la confianza toma tiempo y que las cosas no se borran de la noche a la mañana, pero mi arrepentimiento es sincero y mi deseo de hacer las cosas bien también.</p>
+        <p class="reveal">Si en tu corazón todavía queda un espacio y deseas darme la oportunidad de demostrarte un cambio real, me encantaría saber si quieres volver a intentarlo conmigo y caminar de la mano otra vez.</p>
+        <p class="reveal">Gracias por haber sido parte de mi vida y por todo lo bonito que me has enseñado. Pase lo que pase, siempre te tendré un cariño inmenso.</p>
+      </section>
+
+      <footer class="letter-sign reveal">
+        <p class="sign-off">Con todo mi cariño,</p>
+        <p class="signature">Axel</p>
+      </footer>
+
+      <section class="reply-box reveal" id="replyBox">
+        <p class="reply-question">Cuando estés lista, me encantaría saber qué sientes.</p>
+        <div class="reply-actions">
+          <button class="btn btn-primary" data-reply="yes">Sí, quiero intentarlo 💛</button>
+          <button class="btn btn-secondary" data-reply="wait">Necesito más tiempo</button>
+        </div>
+        <p class="reply-response" id="replyResponse" aria-live="polite"></p>
+        <button class="reset-reply" id="resetReply" hidden>Cambiar respuesta</button>
+      </section>
+    </main>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
