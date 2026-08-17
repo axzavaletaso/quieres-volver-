@@ -20,11 +20,17 @@ for (let i = 0; i < total; i++) {
 const envelopeBtn = document.getElementById('envelopeBtn');
 const envelopeScene = document.getElementById('envelopeScene');
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const bgMusic = document.getElementById('bgMusic');
+const musicToggle = document.getElementById('musicToggle');
 
 envelopeBtn.addEventListener('click', () => {
   if (envelopeBtn.classList.contains('opening')) return;
   envelopeBtn.classList.add('opening');
   envelopeBtn.setAttribute('aria-label', 'Carta abierta');
+
+  bgMusic.volume = 0.5;
+  bgMusic.play().then(() => { musicToggle.hidden = false; }).catch(() => {});
+
   const wait = reduced ? 50 : 1300;
   setTimeout(() => {
     envelopeScene.classList.add('fade-out');
@@ -85,4 +91,17 @@ resetReply.addEventListener('click', () => {
   replyResponse.classList.remove('show');
   replyResponse.textContent = '';
   resetReply.hidden = true;
+});
+
+// Botón de música (silenciar / reproducir)
+musicToggle.addEventListener('click', () => {
+  if (bgMusic.paused) {
+    bgMusic.play();
+    musicToggle.classList.remove('muted');
+    musicToggle.setAttribute('aria-label', 'Silenciar música');
+  } else {
+    bgMusic.pause();
+    musicToggle.classList.add('muted');
+    musicToggle.setAttribute('aria-label', 'Reproducir música');
+  }
 });
